@@ -1,18 +1,27 @@
 {
-  "name": "unison-app",
+  "name": "lbit-app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "env:dev": "NODE_ENV=development",
+    "env:prod": "NODE_ENV=production",
+    "next:dev": "next dev",
+    "dev": "npm run env:dev node server/server.js",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "npm install && npm run build && npm run env:prod node server/server.js"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@fontsource/roboto": "^4.5.8",
+    "@mui/icons-material": "^5.11.0",
+    "@mui/material": "^5.11.3",
     "@next/font": "13.1.1",
-    "eslint": "8.31.0",
-    "eslint-config-next": "13.1.1",
+    "axios": "^1.2.2",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
     "next": "13.1.1",
+    "promise-mysql": "^5.2.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   }
