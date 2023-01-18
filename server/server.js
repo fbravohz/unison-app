@@ -15,7 +15,11 @@ app.prepare()
       if (req.url === '/users') {
         const user = {some: 'username'};
         res.json(user);
-      } else {
+      }
+      if (req.url === '/doLogin'){
+
+      }
+      else {
         res.status(404).send("NOT_FOUND");
       }
     });
@@ -24,8 +28,8 @@ app.prepare()
       handle(req, res);
     });
 
-    server.listen(3000, (err) => {
+    server.listen(8080, (err) => {
       if (err) throw err;
-      console.log('>Custom server ready on http://localhost:3000');
+      console.log('>Custom server ready on http://localhost:8080');
     });
 });

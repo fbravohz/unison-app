@@ -53,7 +53,7 @@ function MyLogo(){
   }
   return (
     <Grid item>
-      <Image src={logoGrowHill} height={190} width={250} sx={imageStyle}></Image>
+      <Image src={logoGrowHill} height={190} width={230} sx={imageStyle}></Image>
     </Grid>
   )
 }

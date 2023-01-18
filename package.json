@@ -1,14 +1,13 @@
 {
-  "name": "lbit-app",
+  "name": "unison-app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "env:dev": "NODE_ENV=development",
     "env:prod": "NODE_ENV=production",
-    "next:dev": "next dev",
-    "dev": "npm run env:dev node server/server.js",
+    "dev": "npm run env:dev && next dev -p 8080",
     "build": "next build",
-    "start": "npm install && npm run build && npm run env:prod node server/server.js"
+    "start": "npm run env:prod && next start -p 8080"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
@@ -23,6 +22,7 @@
     "next": "13.1.1",
     "promise-mysql": "^5.2.0",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "sharp": "^0.31.3"
   }
 }
