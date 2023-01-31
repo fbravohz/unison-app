@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 import { Alert, Button, Grid, Paper, TextField } from '@mui/material'
 import { styled } from '@mui/material/styles';
 import LockPersonOutlinedIcon from '@mui/icons-material/LockPersonOutlined';
@@ -7,12 +7,8 @@ import PasswordRoundedIcon from '@mui/icons-material/PasswordRounded';
 import KeyIcon from '@mui/icons-material/Key';
 import Image from 'next/image'
 import logoGrowHill from '/public/logoGrowhillb.png'
-import '@fontsource/roboto/300.css';
-import { useRouter } from 'next/router'
 import { useState } from 'react'
-import { NextResponse } from 'next/server'
-import { sendEtagResponse } from 'next/dist/server/send-payload';
-
+import '@fontsource/roboto/300.css';
 
 const iconStyle ={
   margin: 'auto',
