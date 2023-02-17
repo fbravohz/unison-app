@@ -12,7 +12,7 @@ async function getUser(username) {
   /* Checking if the username is null, and if it is, it sets it to an empty string. */
   if (!username) username = "";
   /* Querying the database for the user with the email of the username. */
-  const query = await db("users").select("*").where("email", username);
+  const query = await db("user").select("*").where("username", username);
   /* It closes the connection to the database. */
   db.destroy();
   /* Checking if the query returned any results. If it did not, it returns null. */
