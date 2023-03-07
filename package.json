@@ -8,7 +8,8 @@
     "dev": "npm run env:dev && next dev -p 8080",
     "build": "next build",
     "start": "npm run env:prod && next start -p 8080",
-    "lint": "next lint"
+    "lint": "next lint",
+    "testing": "node lib/testing.js"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",

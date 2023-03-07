@@ -1,6 +1,6 @@
 /* Importing the necessary components from the Material UI library. */
 import React from 'react';
-import Head from 'next/head';
+import { Box } from '@mui/system';
 import { IndexDrawer } from "./Drawer/IndexDrawer";
 /**
  * The function Home is a React component that takes a user object as a prop and returns a div with a
@@ -10,7 +10,9 @@ import { IndexDrawer } from "./Drawer/IndexDrawer";
 function IndexComponent( props ) {
   return (
       /* Rendering the PermanentDrawerLeft component and passing the user object to it. */
-      <IndexDrawer user={ props.user }/>
+      <Box sx={{ display: 'flex'}}>
+        <IndexDrawer user={ props.user }/>
+      </Box>
   )
 }
 

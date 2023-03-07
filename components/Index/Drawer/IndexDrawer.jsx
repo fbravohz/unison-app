@@ -27,7 +27,7 @@ function IndexDrawer ( props ) {
       <UserToolbar fullname={props?.user?.fullname}/>
       <Divider/>
       {/* A list of modules that the user can access. */}
-      <ModulesList modulesList={['item 1', 'item2', 'item 3', 'item 4', 'item 5', 'item 6', 'item 7']}/>
+      <ModulesList modulesList={['Usuarios', 'item2', 'item 3', 'item 4']}/>
       <Divider/>
       {/* It sends a POST request to the server, which logs the user out, and then reloads the page. */}
       <LogoutButton/>

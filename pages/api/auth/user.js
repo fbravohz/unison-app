@@ -1,27 +1,20 @@
-/* Importing the `withIronSessionApiRoute` function from the `iron-session/next` package. */
+/* It's importing the `withIronSessionApiRoute` function from the `iron-session/next` package,
+the `ironOptions` object from the `lib/ironOptions` file, and the `AuthController` class from the
+`controllers/authController` file. */
 import { withIronSessionApiRoute } from "iron-session/next";
 import { ironOptions } from "./../../../lib/ironOptions";
-
+const { AuthController } = require('./../../../controllers/authController');
 /* Exporting the `userRoute` function with the `withIronSessionApiRoute` function. */
 export default withIronSessionApiRoute(userRoute, ironOptions);
 /**
- * If the user is logged in, send the user object to the client. Otherwise, send an error message
+ * It's an async function that takes in a request and response object, creates a new instance of the
+ * AuthController class, and then calls the epAuthUser method on that instance, passing in the request
+ * object
  * @param req - The request object.
  * @param res - The response object.
  */
-function userRoute(req, res) {
-  /* Checking if the user is logged in. If the user is logged in, it sends the user object to the client. */
-  if (req.session.user !== undefined) {
-    res.status(200).send(req.session.user);
-  } else {
-  /* If the user is not logged in, it sends an error message to the client. */
-    res.status(errorInvalidCredentials.status).send(errorInvalidCredentials);
-  }
+async function userRoute(req, res) {
+  const authController = new AuthController();
+  const result = await authController.epAuthUser(req);
+  res.status(result.status).send(result);
 }
-/* An error object that is returned if the credentials are not valid. */
-const errorInvalidCredentials = {
-  object: "error",
-  status: 403,
-  code: "invalid_credentials",
-  message: "Invalid credentials.",
-};

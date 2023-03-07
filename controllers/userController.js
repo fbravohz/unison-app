@@ -1,44 +1,110 @@
 /* Importing the userModel and hashService modules. */
-const userModel = require("./../models/userModel");
-const hashService = require("./../lib/hashService");
+const { UserModel } = require("./../models/userModel");
+const { HttpCodes } = require('./../lib/httpCodesService');
+class UserController {
+  constructor(){
+  }
 /**
- * It takes a password, hashes it, and returns the hashed password
- * @param password - The password to be hashed.
- * @returns The hashed password
+ * It handles the requests to the /users endpoint
+ * @param req - The request object.
+ * @returns an object with the following properties:
+ *   - statusCode: The HTTP status code
+ *   - message: The message to be displayed
+ *   - data: The data to be displayed
+ *   - code: The error code
  */
-async function createHashPassword(password) {
-  hashedPass = await hashService.hashPassword(password);
-  return hashedPass;
-}
-/**
- * It checks if the user exists in the database, if it does, it compares the password with the one in
- * the database, if it matches, it returns the user object
- * @param username - The username of the user you want to check.
- * @param password - The password that the user entered.
- */
-async function checkUser(username, password) {
-  /* Trying to execute the code inside the block. */
-  try {
-    /* Calling the getUser function in the userModel module, and it is waiting for the result. */
-    const resultQuery = await userModel.getUser(username);
-    /* Comparing the password that the user entered with the one in the database. */
-    if (resultQuery) {
-      /* Comparing the password that the user entered with the one in the database. */
-      const resultComparePass = await hashService.comparePassword(
-        password,
-        resultQuery.password
-      );
-      /* Returning the user object if the password matches. */
-      if (resultComparePass) {
-        return resultQuery;
+  async users( req ){
+    const httpCodes = new HttpCodes();
+    const userModel = new UserModel();
+/* It checks if the cookie `growhillSession` is set. If it is not set, it returns a response object
+with the HTTP status code 401 (Unauthorized). */
+    if(!req.cookies?.growhillSession)
+      return httpCodes.responseUnauthorized;
+/* Handling the GET requests to the endpoint `/users`. */
+    if(req.method === 'GET'){
+      try{
+        httpCodes.responseOk.data = await userModel.userReadAll();
+        return httpCodes.responseOk;
+      }catch(e){
+        httpCodes.responseNotFound.message = e.message;
+        httpCodes.responseNotFound.code = e.code;
+        return httpCodes.responseNotFound;
       }
     }
-  } catch (err) {
-    /* Catching any errors that might occur in the try block. */
-    console.error(err);
+/* Handling the POST requests to the endpoint `/users`. */
+    if(req.method === 'POST'){
+      try{
+        const result = await userModel.userCreate(req.body);
+        httpCodes.responseCreated.data = '/users/'+result;
+        return httpCodes.responseCreated;
+      }catch(e){
+        httpCodes.responseBadRequest.code = e.code;
+        httpCodes.responseBadRequest.message = e.message
+        return httpCodes.responseBadRequest;
+      }
+    }
+/* Returning a response object with the HTTP status code 405 (Method Not Allowed). */
+    else{
+      return httpCodes.responseMethodNotAllowed;
+    }
   }
-  /* Returning null if the user is not found in the database or if the password does not match. */
-  return null;
+/**
+ * It handles the requests to the endpoint `/users/:id` and returns the appropriate response
+ * @param req - The request object.
+ * @returns an object with the following properties:
+ * - code: The HTTP status code
+ * - message: The HTTP status message
+ * - data: The data to be sent to the client
+ */
+  async usersId( req ){
+    const httpCodes = new HttpCodes();
+    const userModel = new UserModel();
+/* It checks if the cookie `growhillSession` is set. If it is not set, it returns a response object
+with the HTTP status code 401 (Unauthorized). */
+    if(!req.cookies?.growhillSession)
+      return httpCodes.responseUnauthorized;
+/* A GET request to the endpoint `/users/:id` */
+    if(req.method === 'GET'){
+      try{
+        const [ result ] = await userModel.userReadById(req.query.id);
+        httpCodes.responseOk.data = result;
+        return httpCodes.responseOk;
+      }catch(e){
+        httpCodes.responseNotFound.code = e.code;
+        httpCodes.responseNotFound.message = e.message;
+        return httpCodes.responseNotFound;
+      }
+    }
+/* Handling the PATCH requests to the endpoint `/users/:id`. */
+    if(req.method === 'PATCH'){
+      try{
+        if(await userModel.userUpdateById(req.query.id, req.body) === 0)
+          return httpCodes.responseNotFound;
+        httpCodes.responseOk.data = '/users/'+req.query.id;
+        return httpCodes.responseOk;
+      }catch(e){
+        httpCodes.responseBadRequest.code = e.code;
+        httpCodes.responseBadRequest.message = e.message;
+        return httpCodes.responseBadRequest;
+      }
+    }
+/* Handling the DELETE requests to the endpoint `/users/:id`. */
+    if(req.method === 'DELETE'){
+      try{
+        const result = await userModel.userDeleteByIdVirtual(req.query.id);
+        console.log(result);
+        return httpCodes.responseNoContent;
+      }catch(e){
+        httpCodes.responseBadRequest.code = e.code;
+        httpCodes.responseBadRequest.message = e.message;
+        return httpCodes.responseBadRequest;
+      }
+    }
+/* Returning a response object with the HTTP status code 405 (Method Not Allowed) */
+    else{
+      return httpCodes.responseMethodNotAllowed;
+    }
+  }
 }
-/* Exporting the checkUser function so that it can be used in other modules. */
-module.exports.checkUser = checkUser;
+
+module.exports = { UserController };
