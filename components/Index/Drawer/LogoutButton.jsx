@@ -1,6 +1,6 @@
 import React from "react";
 import {ListItemButton,ListItemIcon,ListItemText,ListItem }from '@mui/material';
-import LogoutIcon from '@mui/icons-material/Logout';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 /**
  * It sends a POST request to the server, which logs the user out, and then reloads the page
  * @returns A button that logs the user out.
@@ -27,7 +27,7 @@ function LogoutButton(){
         <ListItem key={1} disablePadding>
           <ListItemButton onClick={logoutHandler}>
             <ListItemIcon>
-              <LogoutIcon/>
+              <ExitToAppIcon/>
             </ListItemIcon>
             <ListItemText primary={'Cerrar sesión'} />
           </ListItemButton>

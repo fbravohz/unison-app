@@ -9,17 +9,24 @@ class UserModel {
  */
   constructor() {
   }
+
 /**
- * It takes a username and returns it if it's a valid email, otherwise it throws an error
- * @param username - The username of the user to authenticate.
- * @returns The username is being returned if it is a string and if it matches the regular expression.
+ * It takes a username, checks if the domain is valid, and returns the username if it is
+ * @param username - The username of the user to be validated.
+ * @returns A promise that resolves to a string.
  */
-  #validateUsername(username){
-    if(typeof(username) == 'string' && username.match(/@abssa\.com\.mx$/)){
+  async #validateUsername(username){
+    this.#knex = databaseService.databaseConnection();
+    const resultQuery = await this.#knex('company').select('domain');
+    const resultMap = await resultQuery.map((value) => {
+      const regex = new RegExp("@(" + value.domain + ")$");
+      return regex.test(username);
+    })
+    if(resultMap.some(value => value === true)){
       return username.toLowerCase();
     }
     else{
-      const err = new Error('Invalid username, must be an email');
+      const err = new Error('Invalid username, must have a valid domain.');
       err.code = 'ERR_INVALID_USERNAME';
       throw err;
     }
@@ -34,7 +41,7 @@ class UserModel {
       return await hashService.hashPassword(password);
       }
     else{
-      const err = new Error('Invalid password');
+      const err = new Error('Invalid password.');
       err.code = 'ERR_INVALID_PASSWORD';
       throw err;
     }
@@ -48,7 +55,7 @@ class UserModel {
     if(typeof(fullname) == 'string')
       return fullname;
     else{
-      const err = new Error('Invalid fullname');
+      const err = new Error('Invalid fullname.');
       err.code = 'ERR_INVALID_FULLNAME';
       throw err;
     }
@@ -61,7 +68,7 @@ class UserModel {
  */
   #validateHireDate(date){
     const myDate = new Date(date);
-    if(myDate instanceof Date && myDate != 'Invalid Date')
+    if(myDate instanceof Date && myDate != 'Invalid Date.')
       return myDate;
     else{
       const err = new Error('Invalid date');
@@ -78,7 +85,7 @@ class UserModel {
     if(Number.isInteger(id))
       return id;
     else{
-      const err = new Error('Invalid id');
+      const err = new Error('Invalid id.');
       err.code = 'ERR_INVALID_ID';
       throw err;
     }
@@ -100,7 +107,7 @@ class UserModel {
   async userCreate(userData){
     this.#knex = databaseService.databaseConnection();
     try{
-      userData.username = this.#validateUsername(userData.username);
+      userData.username = await this.#validateUsername(userData.username);
       userData.password = await this.#validatePassword(userData.password);
       userData.fullname = this.#validateFullname(userData.fullname);
       userData.hireDate = this.#validateHireDate(userData.hireDate);
@@ -241,7 +248,7 @@ class UserModel {
     this.#knex = databaseService.databaseConnection();
     try{
       if(userData.username != undefined)
-        userData.username = this.#validateUsername(userData.username);
+        userData.username = await this.#validateUsername(userData.username);
       if(userData.password != undefined)
         userData.password = await this.#validatePassword(userData.password);
       if(userData.fullname != undefined)
@@ -297,7 +304,7 @@ class UserModel {
     try{
       const [ userData ] = await this.#userReadByUsername(username);
       const res = await hashService.comparePassword(password, userData.password);
-      if(res){
+      if(res && userData.id_userState === 1){
         delete userData.password;
         return userData;
         }

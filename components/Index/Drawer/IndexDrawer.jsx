@@ -1,8 +1,11 @@
 import React from "react";
-import {Divider,Drawer }from '@mui/material';
+import {Divider, Drawer }from '@mui/material';
 import { UserToolbar } from './UserToolbar';
 import { ModulesList } from './ModulesList';
 import { LogoutButton } from './LogoutButton';
+
+const modules = [{icon: null,label: 'Usuarios'}, {icon: null,label: 'Usuarios2'}, {icon: null,label: 'Usuarios3'}, {icon: null,label: 'Usuarios4'}]
+
 /**
  * A React component that returns a Drawer
  * @returns A Drawer component.
@@ -27,7 +30,7 @@ function IndexDrawer ( props ) {
       <UserToolbar fullname={props?.user?.fullname}/>
       <Divider/>
       {/* A list of modules that the user can access. */}
-      <ModulesList modulesList={['Usuarios', 'item2', 'item 3', 'item 4']}/>
+      <ModulesList/>
       <Divider/>
       {/* It sends a POST request to the server, which logs the user out, and then reloads the page. */}
       <LogoutButton/>
