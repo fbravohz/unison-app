@@ -4,7 +4,6 @@ import { UserToolbar } from './UserToolbar';
 import { ModulesList } from './ModulesList';
 import { LogoutButton } from './LogoutButton';
 
-const modules = [{icon: null,label: 'Usuarios'}, {icon: null,label: 'Usuarios2'}, {icon: null,label: 'Usuarios3'}, {icon: null,label: 'Usuarios4'}]
 
 /**
  * A React component that returns a Drawer

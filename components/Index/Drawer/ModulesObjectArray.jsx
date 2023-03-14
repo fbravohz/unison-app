@@ -15,9 +15,9 @@ import BadgeIcon from '@mui/icons-material/Badge';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import HolidayVillageIcon from '@mui/icons-material/HolidayVillage';
 const subUsuarios = [
-  {label: 'Listado', icon: <BadgeIcon/>, route: 'users/listado'},
-  {label: 'Vacaciones', icon: <HolidayVillageIcon/>, route: 'users/listado'},
-  {label: 'Perfiles', icon: <ManageAccountsIcon/>, route: 'users/listado'},
+  {label: 'Listado', icon: <BadgeIcon/>, route: '/users'},
+  {label: 'Vacaciones', icon: <HolidayVillageIcon/>, route: '/vacations'},
+  {label: 'Perfiles', icon: <ManageAccountsIcon/>, route: '/profiles'},
 ];
 
 ['Listado', 'Vacaciones', 'Perfiles', 'Zonas', 'Puestos', 'Alertas']
