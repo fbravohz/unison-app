@@ -26,12 +26,10 @@
     "knex": "^2.4.1",
     "mysql2": "^3.0.1",
     "next": "13.1.1",
-    "promise-mysql": "^5.2.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-redux": "^8.0.5",
-    "sharp": "^0.31.3",
-    "swr": "^2.0.1"
+    "sharp": "^0.31.3"
   },
   "devDependencies": {
     "eslint": "^8.32.0",
