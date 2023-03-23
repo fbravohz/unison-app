@@ -14,26 +14,31 @@ import EngineeringIcon from '@mui/icons-material/Engineering';
 import BadgeIcon from '@mui/icons-material/Badge';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import HolidayVillageIcon from '@mui/icons-material/HolidayVillage';
+
+const iconColor = {color: '#547b0f'}
+
 const subUsuarios = [
-  {label: 'Listado', icon: <BadgeIcon/>, route: '/users'},
-  {label: 'Vacaciones', icon: <HolidayVillageIcon/>, route: '/vacations'},
-  {label: 'Perfiles', icon: <ManageAccountsIcon/>, route: '/profiles'},
+  {label: 'Listado', icon: <BadgeIcon style={iconColor} />, route: '/users'},
+  {label: 'Vacaciones', icon: <HolidayVillageIcon style={iconColor} />, route: '/vacations'},
+  {label: 'Perfiles', icon: <ManageAccountsIcon style={iconColor} />, route: '/profiles'},
 ];
 
 ['Listado', 'Vacaciones', 'Perfiles', 'Zonas', 'Puestos', 'Alertas']
 
 const ModulesObjectArray = [
-  {label: 'Inicio', icon: <HomeIcon/>},
-  {label: 'E-mail', icon: <EmailIcon/>},
-  {label: 'Usuarios', icon: <PeopleIcon/>, subitems: subUsuarios},
-  {label: 'Clientes', icon: <ContactsIcon/>},
-  {label: 'Demostraciones', icon: <ViewModuleIcon/>},
-  {label: 'Informes semanales', icon: <ArticleIcon/>},
-  {label: 'Informes directivos', icon: <SummarizeIcon/>},
-  {label: 'Gastos', icon: <PointOfSaleIcon/>},
-  {label: 'Reportes', icon: <AssessmentIcon/>},
-  {label: 'Prospectos', icon: <BusinessCenterIcon/>},
-  {label: 'Operación', icon: <EngineeringIcon/>},
+  {label: 'Inicio', icon: <HomeIcon style={iconColor} />},
+  {label: 'E-mail', icon: <EmailIcon style={iconColor} />},
+  {label: 'Usuarios', icon: <PeopleIcon style={iconColor} />, subitems: subUsuarios},
+  {label: 'Clientes', icon: <ContactsIcon style={iconColor} />},
+  {label: 'Demostraciones', icon: <ViewModuleIcon style={iconColor} />},
+  {label: 'Informes semanales', icon: <ArticleIcon style={iconColor} />},
+  {label: 'Informes directivos', icon: <SummarizeIcon style={iconColor} />},
+  {label: 'Gastos', icon: <PointOfSaleIcon style={iconColor} />},
+  {label: 'Reportes', icon: <AssessmentIcon style={iconColor} />},
+  {label: 'Prospectos', icon: <BusinessCenterIcon style={iconColor} />},
+  {label: 'Operación', icon: <EngineeringIcon style={iconColor} />},
 ];
+
+
 
 module.exports = { ModulesObjectArray };

@@ -8,7 +8,7 @@ export default function Index({ user }) {
   return (
     <>
       <Layout user={ user }>
-        <h1>hola</h1>
+        <h1>Index</h1>
       </Layout>
     </>
   )

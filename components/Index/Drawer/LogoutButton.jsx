@@ -27,7 +27,7 @@ function LogoutButton(){
         <ListItem key={1} disablePadding>
           <ListItemButton onClick={logoutHandler}>
             <ListItemIcon>
-              <ExitToAppIcon/>
+              <ExitToAppIcon style={{color: '#547b0f'}}/>
             </ListItemIcon>
             <ListItemText primary={'Cerrar sesión'} />
           </ListItemButton>
