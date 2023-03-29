@@ -1,4 +1,4 @@
-/* Importing the userModel and hashService modules. */
+/* Importing the UserModel and HttpCodes classes from the userModel.js and httpCodesService.js files. */
 const { UserModel } = require("./../models/userModel");
 const { HttpCodes } = require('./../lib/httpCodesService');
 class UserController {

@@ -38,22 +38,24 @@ export default function UsersTable( { usersData } ) {
 
     const myKeys = getKeys();
 
-    const myLabels = {
-      id_user: "Id",
-      username: "Usuario",
-      fullname: "Nombre completo",
-      hireDate: "Antigüedad",
-      id_position: "Posición",
-      id_company: "Compañia",
-      id_userProfile: "Perfil de usuario",
-      id_userState: "Estado de usuario"
+    const columnToLabel = {
+      id_user: 'ID',
+      fullname: 'Nombre completo',
+      username: 'Usuario/correo',
+      password: 'Contraseña',
+      hireDate: 'Contratación',
+      company: 'Compañia',
+      country: 'País',
+      position: 'Posición',
+      userProfile: 'Perfil de usuario',
+      userState: 'Estado'
     }
 
     myKeys.forEach((element) => {
       columns.push(
         {
           id: element,
-          label: myLabels[element] ?? element,
+          label: columnToLabel[element] ?? element,
           minWidth: 50,
           align: 'left',
         }

@@ -122,17 +122,43 @@ class UserModel {
       this.#knex.destroy();
     }
   }
-/**
- * It returns the user with the given id
- * @param userId - The id of the user you want to read.
- * @returns The user object
- */
-  async userReadById(id_user){
+
+  async #userReadWhereId(id){
+    let operator = '=';
+    let id_user = id;
+    if(id_user === undefined){
+      operator = '!=';
+      id_user = 0;
+    }
     this.#knex = databaseService.databaseConnection();
     try{
-      const res = await this.#knex('user').select('*').where('id_user', id_user).andWhere('id_userState', '=', 1);
+      const select = [
+        'user.id_user',
+        'user.fullname',
+        'user.username',
+        'user.password',
+        'user.hireDate',
+        'company.company',
+        'jurisdiction.country',
+        "position.position",
+        'userProfile.userProfile',
+        'userState.userState'
+        ]
+      const res = await this.#knex
+        .select(select)
+        .from('user')
+        .where('id_user', operator, id_user)
+        .join('company', {'user.id_company': 'company.id_company'})
+        .join('jurisdiction', {'company.id_jurisdiction': 'jurisdiction.id_jurisdiction'})
+        .join('position', {'user.id_position': 'position.id_position'})
+        .join('userProfile', {'user.id_userProfile': 'userProfile.id_userProfile'})
+        .join('userState', {'user.id_userState': 'userState.id_userState'})
       if(res.length > 0){
-        res.map((value) => {delete value.password});
+        res.map((value) => 
+        {
+          value.password = '********';
+          value.hireDate = new Date(value.hireDate).toISOString().substring(0, 10);;
+        });
         return res;
       }
       else{
@@ -145,6 +171,14 @@ class UserModel {
     } finally {
       this.#knex.destroy();
     }
+  }
+/**
+ * It returns the user with the given id
+ * @param userId - The id of the user you want to read.
+ * @returns The user object
+ */
+  async userReadById(id_user){
+    return this.#userReadWhereId(id_user);
   }
 /**
  * > This function returns the user information of the user with the given username
@@ -173,23 +207,7 @@ class UserModel {
  * @returns An array of objects containing all the users in the database.
  */
   async userReadAll(){
-    this.#knex = databaseService.databaseConnection();
-    try{
-      const res = await this.#knex('user').select('*').where('id_userState','=', 1);
-      if(res.length > 0){
-        res.map((value) => {delete value.password});
-        return res;
-      }
-      else{
-      const err = new Error('No users found');
-      err.code = 'ERR_NO_USERS_FOUND';
-      throw err;
-      }
-    }catch(e){
-      throw e;
-    } finally {
-      this.#knex.destroy();
-    }
+    return this.#userReadWhereId();
   }
   /**
  * It returns the user with the given id
