@@ -1,0 +1,15 @@
+.usersByIdContainerButtons {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  grid-row-start: 1;
+  grid-column-start: 3;
+  margin-bottom: 20px;
+}
+
+.usersByIdContainerButtons .fabButton {
+  margin: 10px;
+  min-width: 150px;
+  box-shadow: none;
+}

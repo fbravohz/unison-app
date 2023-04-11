@@ -1,0 +1,13 @@
+.usersByIdProgressContainer {
+  height: 100vh;
+  width: 100vw;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+}
+
+.usersByIdProgressContainer .circularProgress {
+  color: #547b0f;
+  grid-column-start: 3;
+  grid-row-start: 3;
+}

@@ -1,0 +1,38 @@
+/* UserDataField */
+.UserDataFieldContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  margin-left: 25px;
+}
+
+.UserDataFieldTypography {
+  margin-top: 30px;
+  color: #7e7e7e;
+}
+
+.UserDataFieldChip {
+  margin-top: 20px;
+  background-color: #547b0f;
+  min-width: 190px;
+  height: 40px;
+}
+
+.UserDataFieldChipLabel {
+  color: #ffffff;
+}
+
+/* EditUserDataField */
+.EditUserDataFieldContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  margin-left: 25px;
+}
+
+.EditUserDataFieldTypography {
+  margin-top: 30px;
+  color: #7e7e7e;
+}
