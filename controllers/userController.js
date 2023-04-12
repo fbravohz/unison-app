@@ -91,8 +91,7 @@ with the HTTP status code 401 (Unauthorized). */
 /* Handling the DELETE requests to the endpoint `/users/:id`. */
     if(req.method === 'DELETE'){
       try{
-        const result = await userModel.userDeleteByIdVirtual(req.query.id);
-        console.log(result);
+        const result = await userModel.userDeleteByIdLogic(req.query.id);
         return httpCodes.responseNoContent;
       }catch(e){
         httpCodes.responseBadRequest.code = e.code;

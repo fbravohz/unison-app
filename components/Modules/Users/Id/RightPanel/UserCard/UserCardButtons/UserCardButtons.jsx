@@ -34,6 +34,7 @@ function FabButton({color, text, icon, onClick}) {
  * @return {JSX.Element} The UserCardButtons component.
  */
 export default function UserCardButtons() {
+  const [isDelete, setIsDelete]  = React.useState(false);
   const isEditData = useSelector((state) => state.editUserData.isEditData);
   const updatedData = useSelector((state) => state.editUserData.updatedData);
   const dispatch = useDispatch();
@@ -42,12 +43,20 @@ export default function UserCardButtons() {
   return (
     <div className={styles.usersByIdContainerButtons}>
       {!isEditData ?
-        <FabButton
+        (!isDelete ?
+          <FabButton
           color="primary"
           text="Editar"
           icon={<EditIcon/>}
           onClick={() => dispatch(setIsEditData(true))}
-        /> :
+          /> :
+          <FabButton
+          color="error"
+          text="Confirmar"
+          icon={<DeleteIcon/>}
+          onClick={() => {handleDelete(router)}}
+          />
+        ) :
         <FabButton
           color="primary"
           text="Guardar"
@@ -55,11 +64,20 @@ export default function UserCardButtons() {
           onClick={() => handleSave(updatedData, router, dispatch, setIsDataUpdated, setIsEditData)}
         />}
       {!isEditData ?
+        (!isDelete ?
         <FabButton
           color="error"
           text="Eliminar"
           icon={<DeleteIcon/>}
+          onClick={() => {setIsDelete(true)}}
         /> :
+        <FabButton
+          color=""
+          text="Cancelar"
+          icon={<CancelIcon/>}
+          onClick={() => {setIsDelete(false)}}
+        />
+        ) :
         <FabButton
           color="error"
           text="Cancelar"
@@ -75,11 +93,11 @@ export default function UserCardButtons() {
 
 async function handleSave(updatedData, router, dispatch, setIsDataUpdated, setIsEditData){
   const req = {
-  method: 'PATCH',
-  body: JSON.stringify(updatedData),
-  headers: {
-    'Content-Type': 'application/json'
-  }
+    method: 'PATCH',
+    body: JSON.stringify(updatedData),
+    headers: {
+      'Content-Type': 'application/json'
+    }
   }
   const endpoint = `/api/users/${router.query.id}`;
   const res = await fetch(endpoint, req);
@@ -88,4 +106,17 @@ async function handleSave(updatedData, router, dispatch, setIsDataUpdated, setIs
     dispatch(setIsDataUpdated(true));
     dispatch(setIsEditData(false));
   }
+}
+
+async function handleDelete(router){
+  const req = {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }
+  const endpoint = `/api/users/${router.query.id}`;
+  const res = await fetch(endpoint, req);
+  console.log(res);
+  router.push('/users')
 }

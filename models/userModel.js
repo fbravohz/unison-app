@@ -18,6 +18,7 @@ class UserModel {
   async #validateUsername(username){
     this.#knex = databaseService.databaseConnection();
     const resultQuery = await this.#knex('company').select('domain');
+    this.#knex.destroy();
     const resultMap = await resultQuery.map((value) => {
       const regex = new RegExp("@(" + value.domain + ")$");
       return regex.test(username);
@@ -154,9 +155,9 @@ class UserModel {
         .join('userProfile', {'user.id_userProfile': 'userProfile.id_userProfile'})
         .join('userState', {'user.id_userState': 'userState.id_userState'})
       if(res.length > 0){
-        res.map((value) => 
+        res.map((value) =>
         {
-          value.password = '********';
+          value.password = "••••••••";
           value.hireDate = new Date(value.hireDate).toISOString().substring(0, 10);;
         });
         return res;
@@ -338,16 +339,3 @@ class UserModel {
 }
 
 module.exports = { UserModel };
-
-// async getTableColumns(table){
-//   let obj = {}
-//   this.#knex = databaseService.databaseConnection();
-//   const getTableData = await this.#knex.raw(`SELECT * FROM ${table}`);
-//   for(const element of getTableData[1]){
-//     obj = {[`column_${element.name}`]: element.name, ...obj}
-//   }
-//   this.#knex.destroy();
-//   obj = Object.entries(obj).reverse();
-//   obj = Object.fromEntries(obj)
-//   return obj;
-// }
