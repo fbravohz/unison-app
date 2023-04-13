@@ -30,5 +30,6 @@ yarn-error.log*
 
 # vercel
 .vercel
+.vscode
 
 /pages/gpttest3.jsx

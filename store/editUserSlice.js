@@ -13,7 +13,8 @@ const initialState = {
   },
   isEditData: false,
   userData: undefined,
-  isDataUpdated: false
+  isDataUpdated: false,
+  isCreateUser: false
 }
 
 export const EditUserSlice = createSlice({
@@ -53,6 +54,9 @@ export const EditUserSlice = createSlice({
     setIsDataUpdated: (state, action) => {
       state.isDataUpdated = action.payload;
     },
+    setIsCreateUser: (state, action) => {
+      state.isCreateUser = action.payload;
+    },
     restoreChanges: (state) => {
       state.updatedData.fullname = undefined;
       state.updatedData.username = undefined;
@@ -75,6 +79,7 @@ export const EditUserSlice = createSlice({
       state.isEditData = false;
       state.userData = undefined;
       state.isDataUpdated = false;
+      state.isCreateUser = false;
     },
   }
 })
@@ -92,6 +97,7 @@ restoreAll,
 restoreChanges,
 setIsEditData,
 setUserData,
-setIsDataUpdated } = EditUserSlice.actions
+setIsDataUpdated,
+setIsCreateUser } = EditUserSlice.actions
 
 export default EditUserSlice.reducer

@@ -1,5 +1,6 @@
 /* Importing the databaseService module. */
 const databaseService = require("./../lib/databaseService");
+const { UserModel } = require("./userModel");
 
 class ColumnsModel {
   #knex;
@@ -19,11 +20,12 @@ class ColumnsModel {
   async getColumnsByTableName(table){
     this.#knex = databaseService.databaseConnection();
       try {
-      const [result] = await this.#knex.raw(`SHOW COLUMNS FROM ${table}`)
-      const columns = result.map((value) => {
-        return value.Field
+      const userModel = new UserModel()
+      const [result] = await userModel.userReadAll()
+      Object.keys(result).forEach((column) => {
+        result[column] = '';
       })
-      return columns
+      return result;
     } catch (error) {
       console.error(error);
       throw error;

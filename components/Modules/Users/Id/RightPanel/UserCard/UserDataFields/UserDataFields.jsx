@@ -122,10 +122,13 @@ function EditUserDataFields(){
  */
 export default function UserDataFields(){
   const isEditData = useSelector((state) => state.editUserData.isEditData);
-
+  const isCreateUser = useSelector((state) => state.editUserData.isCreateUser);
   return (
     <>
-      {!isEditData ? <StaticUserDataFields/> : <EditUserDataFields/> }
+      {!isCreateUser && !isEditData ?
+        <StaticUserDataFields/> :
+        <EditUserDataFields/>
+      }
     </>
   );
 }

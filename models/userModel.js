@@ -16,9 +16,7 @@ class UserModel {
  * @returns A promise that resolves to a string.
  */
   async #validateUsername(username){
-    this.#knex = databaseService.databaseConnection();
     const resultQuery = await this.#knex('company').select('domain');
-    this.#knex.destroy();
     const resultMap = await resultQuery.map((value) => {
       const regex = new RegExp("@(" + value.domain + ")$");
       return regex.test(username);

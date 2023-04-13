@@ -8,6 +8,7 @@ import Loading from "../../components/generic/Loading/Loading";
 import RefreshUnauthorized from "/components/generic/RefreshUnauthorized/RefreshUnauthorized";
 import RightPanel from "../../components/Modules/Users/Id/RightPanel/RightPanel";
 import { setUserData, setIsDataUpdated } from "/store/editUserSlice";
+import { setIsCreateUser } from "../../store/editUserSlice";
 
 /**
  * It fetches data from the server and sets the userData state.
@@ -34,18 +35,51 @@ async function fetchData(id, dispatch, setIsLoading){
     dispatch(setUserData(data.data));
 }
 
-export default function UsersById(){
+/**
+ * It fetches data from the server and sets the userData state.
+ * @returns The user data is being returned.
+ */
+async function fetchColumns(dispatch, setIsLoading){
+  const req = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    }
+  };
+  setIsLoading(true);
+  const endpoint = `/api/columns/user`;
+  const res = await fetch(endpoint, req);
+  const data = await res.json();
+  setIsLoading(false);
+  if(data.object !== undefined && data.status !== 200)
+    dispatch(setUserData(data));
+  else
+    dispatch(setUserData(data.data));
+}
 
+export default function UsersById(){
   const [ isLoading, setIsLoading ] = React.useState(true);
   const userData = useSelector((state) => state.editUserData.userData)
   const isDataUpdated = useSelector((state) => state.editUserData.isDataUpdated);
   const dispatch = useDispatch();
   const router = useRouter();
+  const isCreateUser = useSelector((state) => state.editUserData.isCreateUser)
+  if(router.query.id === 'createUser')
+    dispatch(setIsCreateUser(true));
 
   React.useEffect(() => {
-    fetchData(router.query.id, dispatch, setIsLoading);
-    isDataUpdated ? dispatch(setIsDataUpdated(false)) : null;
-  },[router.query.id, dispatch, isDataUpdated])
+    if(router.query.id === 'createUser'){
+      fetchColumns(dispatch, setIsLoading);
+      isDataUpdated ? dispatch(setIsDataUpdated(false)) : null;
+      return;
+    }
+    else if(Number.isInteger((parseInt(router.query.id)))){
+      fetchData(router.query.id, dispatch, setIsLoading);
+      isDataUpdated ? dispatch(setIsDataUpdated(false)) : null;
+      return;
+    }
+  },[router.query.id, router, dispatch, isDataUpdated])
 
   React.useEffect(()=>{
     async function restoreAllUpdate (){

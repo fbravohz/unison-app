@@ -37,33 +37,40 @@ export default function UserCardButtons() {
   const [isDelete, setIsDelete]  = React.useState(false);
   const isEditData = useSelector((state) => state.editUserData.isEditData);
   const updatedData = useSelector((state) => state.editUserData.updatedData);
+  const isCreateUser = useSelector((state) => state.editUserData.isCreateUser);
   const dispatch = useDispatch();
   const router = useRouter();
 
   return (
     <div className={styles.usersByIdContainerButtons}>
-      {!isEditData ?
-        (!isDelete ?
-          <FabButton
-          color="primary"
-          text="Editar"
-          icon={<EditIcon/>}
-          onClick={() => dispatch(setIsEditData(true))}
-          /> :
-          <FabButton
-          color="error"
-          text="Confirmar"
-          icon={<DeleteIcon/>}
-          onClick={() => {handleDelete(router)}}
-          />
-        ) :
-        <FabButton
-          color="primary"
-          text="Guardar"
-          icon={<SaveIcon/>}
-          onClick={() => handleSave(updatedData, router, dispatch, setIsDataUpdated, setIsEditData)}
-        />}
-      {!isEditData ?
+        {((!isEditData && !isCreateUser) ?
+          (!isDelete ?
+            <FabButton
+            color="primary"
+            text="Editar"
+            icon={<EditIcon/>}
+            onClick={() => dispatch(setIsEditData(true))}
+            /> :
+            <FabButton
+            color="error"
+            text="Confirmar"
+            icon={<DeleteIcon/>}
+            onClick={() => {handleDelete(router)}}
+            />
+          ) : (
+            <FabButton
+              color="primary"
+              text="Guardar"
+              icon={<SaveIcon/>}
+              onClick={() => { !isCreateUser ?
+              handleSave(updatedData, router, dispatch, setIsDataUpdated, setIsEditData)
+              : handleCreate(updatedData, router)
+              }}
+            />
+          )
+        )}
+
+      {(!isEditData && !isCreateUser)?
         (!isDelete ?
         <FabButton
           color="error"
@@ -83,12 +90,42 @@ export default function UserCardButtons() {
           text="Cancelar"
           icon={<CancelIcon/>}
           onClick={() => {
-            dispatch(setIsEditData(false));
-            dispatch(restoreChanges());
+            if(!isCreateUser){
+            dispatch(setIsEditData(false))
+            dispatch(restoreChanges())
+            }
+            else
+              router.push('/users')
           }}
         />}
     </div>
   )
+}
+
+async function handleCreate(updatedData, router){
+  updatedData = {
+		"username": "testing5@abssa.com.mx",
+		"fullname": "Testing5",
+		"password": "Testing2Mtfucka!!",
+		"hireDate": "2022-01-01",
+		"id_position": 1,
+		"id_company": 1,
+		"id_userProfile": 1,
+		"id_userState": 1
+}
+  const req = {
+    method: 'POST',
+    body: JSON.stringify(updatedData),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }
+  const endpoint = `/api/users`;
+  const res = await fetch(endpoint, req);
+  const json = await res.json();
+  if(json.status === 201){
+    router.push(json.data)
+  }
 }
 
 async function handleSave(updatedData, router, dispatch, setIsDataUpdated, setIsEditData){
