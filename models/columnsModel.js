@@ -16,10 +16,10 @@ class ColumnsModel {
  * which we want to retrieve the column names.
  * @returns This function returns an array of column names for a given table name.
  */
-  async getColumnsByTableName(column){
+  async getColumnsByTableName(table){
     this.#knex = databaseService.databaseConnection();
       try {
-      const [result] = await this.#knex.raw(`SHOW COLUMNS FROM ${column}`)
+      const [result] = await this.#knex.raw(`SHOW COLUMNS FROM ${table}`)
       const columns = result.map((value) => {
         return value.Field
       })

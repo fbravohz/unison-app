@@ -69,8 +69,9 @@ class UserModel {
  */
   #validateHireDate(date){
     const myDate = new Date(date);
-    if(myDate instanceof Date && myDate != 'Invalid Date.')
-      return myDate;
+    if(myDate instanceof Date && myDate != 'Invalid Date.'){
+      return date;
+    }
     else{
       const err = new Error('Invalid date');
       err.code = 'ERR_INVALID_DATE';
@@ -280,9 +281,8 @@ class UserModel {
         userData.id_company =  this.#validateIdIsInteger(userData.id_company);
       if(userData.id_userProfile != undefined)
         userData.id_userProfile = this.#validateIdIsInteger(userData.id_userProfile);
-      if(userData.id_userState != undefined){
+      if(userData.id_userState != undefined)
         userData.id_userState = this.#validateIdIsInteger(userData.id_userState);
-        }
       return await this.#knex('user').where({id_user: id_user}).update(userData);
     }catch(e){
       throw e;
