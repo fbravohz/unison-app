@@ -103,16 +103,6 @@ export default function UserCardButtons() {
 }
 
 async function handleCreate(updatedData, router){
-  updatedData = {
-		"username": "testing5@abssa.com.mx",
-		"fullname": "Testing5",
-		"password": "Testing2Mtfucka!!",
-		"hireDate": "2022-01-01",
-		"id_position": 1,
-		"id_company": 1,
-		"id_userProfile": 1,
-		"id_userState": 1
-}
   const req = {
     method: 'POST',
     body: JSON.stringify(updatedData),
@@ -123,8 +113,8 @@ async function handleCreate(updatedData, router){
   const endpoint = `/api/users`;
   const res = await fetch(endpoint, req);
   const json = await res.json();
-  if(json.status === 201){
-    router.push(json.data)
+  if(json.status === 200){
+    router.push('/users');
   }
 }
 

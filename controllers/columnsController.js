@@ -18,7 +18,11 @@ class ColumnsController {
 
     if(req.method === 'GET'){
       try{
-        const result = await columnsModel.getColumnsByTableName(req.query.tableName);
+        let result;
+        if(req.query.tableName === 'user')
+          result = await columnsModel.getUserColumnsByTableName();
+        else
+          result = null;
         httpCodes.responseOk.data = result;
         return httpCodes.responseOk;
       }catch(e){

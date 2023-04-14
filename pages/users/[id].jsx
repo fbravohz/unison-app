@@ -9,77 +9,20 @@ import RefreshUnauthorized from "/components/generic/RefreshUnauthorized/Refresh
 import RightPanel from "../../components/Modules/Users/Id/RightPanel/RightPanel";
 import { setUserData, setIsDataUpdated } from "/store/editUserSlice";
 import { setIsCreateUser } from "../../store/editUserSlice";
+import { withIronSessionSsr } from "iron-session/next";
+import { ironOptions } from "../../lib/ironOptions";
 
-/**
- * It fetches data from the server and sets the userData state.
- * @returns The user data is being returned.
- */
-async function fetchData(id, dispatch, setIsLoading){
-  if(id === undefined)
-    return
-  const req = {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    }
-  };
-  setIsLoading(true);
-  const endpoint = `/api/users/${id}`;
-  const res = await fetch(endpoint, req);
-  const data = await res.json();
-  setIsLoading(false);
-  if(data.object !== undefined && data.status === 401)
-    dispatch(setUserData(data));
-  else
-    dispatch(setUserData(data.data));
-}
-
-/**
- * It fetches data from the server and sets the userData state.
- * @returns The user data is being returned.
- */
-async function fetchColumns(dispatch, setIsLoading){
-  const req = {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    }
-  };
-  setIsLoading(true);
-  const endpoint = `/api/columns/user`;
-  const res = await fetch(endpoint, req);
-  const data = await res.json();
-  setIsLoading(false);
-  if(data.object !== undefined && data.status !== 200)
-    dispatch(setUserData(data));
-  else
-    dispatch(setUserData(data.data));
-}
-
-export default function UsersById(){
-  const [ isLoading, setIsLoading ] = React.useState(true);
+export default function UsersById({ serverData }){
+  const [ isLoading, setIsLoading ] = React.useState(false);
   const userData = useSelector((state) => state.editUserData.userData)
   const isDataUpdated = useSelector((state) => state.editUserData.isDataUpdated);
   const dispatch = useDispatch();
   const router = useRouter();
-  const isCreateUser = useSelector((state) => state.editUserData.isCreateUser)
   if(router.query.id === 'createUser')
     dispatch(setIsCreateUser(true));
+  dispatch(setUserData(serverData));
+  isDataUpdated ? dispatch(setIsDataUpdated(false)) : null;
 
-  React.useEffect(() => {
-    if(router.query.id === 'createUser'){
-      fetchColumns(dispatch, setIsLoading);
-      isDataUpdated ? dispatch(setIsDataUpdated(false)) : null;
-      return;
-    }
-    else if(Number.isInteger((parseInt(router.query.id)))){
-      fetchData(router.query.id, dispatch, setIsLoading);
-      isDataUpdated ? dispatch(setIsDataUpdated(false)) : null;
-      return;
-    }
-  },[router.query.id, router, dispatch, isDataUpdated])
 
   React.useEffect(()=>{
     async function restoreAllUpdate (){
@@ -91,7 +34,54 @@ export default function UsersById(){
   return (
     <Layout>
       <RefreshUnauthorized status={userData?.status} router={router}/>
-      { isLoading ? <Loading/> : <RightPanel/>}
+      {isLoading ? <Loading/> : <RightPanel/>}
     </Layout>
   )
 }
+
+/******************************************************** Server Side *********************************************************/
+
+/* Importing the UserController class from the controllers/userController.js file. */
+const { UserController } = require('/controllers/userController');
+/* This line of code is importing the `ColumnsController` class from the `columnsController.js`*/
+const { ColumnsController } = require('/controllers/columnsController');
+
+export const getServerSideProps = withIronSessionSsr(
+  async function getServerSideProps( context ){
+
+    if(Number.isInteger(parseInt(context.query.id))){
+      const userController = new UserController();
+      const req = {
+        query: {id: context.query.id},
+        method: 'GET',
+        cookies: context.req.cookies
+      }
+      const result = await userController.usersId(req);
+      console.log(result);
+      return { props: { serverData: result.data } }
+    }
+
+    if(!Number.isInteger(parseInt(context.query.id)) && String(context.query.id) === 'createUser'){
+      const columnsController = new ColumnsController();
+      const req = {
+        query: {tableName: 'user'},
+        method: 'GET',
+        cookies: context.req.cookies
+      }
+      const result = await columnsController.getTableColumns(req);
+      console.log(result);
+      return { props: { serverData: result.data } }
+    }
+
+    else{
+      return {
+        redirect: {
+          permanent: false,
+          destination: '/users'
+        }
+      }
+    }
+  },
+  ironOptions
+);
+

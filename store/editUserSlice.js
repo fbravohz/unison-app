@@ -23,12 +23,18 @@ export const EditUserSlice = createSlice({
   reducers: {
     updateFullname: (state, action) => {
       state.updatedData.fullname = action.payload;
+      // if(state.updatedData.fullname === '')
+      //   state.updatedData.fullname = undefined;
     },
     updateUsername: (state, action) => {
       state.updatedData.username = action.payload;
+      // if(state.updatedData.username === '')
+      //   state.updatedData.username = undefined;
     },
     updatePassword: (state, action) => {
       state.updatedData.password = action.payload;
+      // if(state.updatedData.password === '')
+      //   state.updatedData.password = undefined;
     },
     updateHireDate: (state, action) => {
       state.updatedData.hireDate = action.payload;
