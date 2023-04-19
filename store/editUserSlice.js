@@ -14,7 +14,8 @@ const initialState = {
   isEditData: false,
   userData: undefined,
   isDataUpdated: false,
-  isCreateUser: false
+  isCreateUser: false,
+  isModal: false,
 }
 
 export const EditUserSlice = createSlice({
@@ -63,6 +64,10 @@ export const EditUserSlice = createSlice({
     setIsCreateUser: (state, action) => {
       state.isCreateUser = action.payload;
     },
+    setIsModal: (state, action) => {
+      state.isModal = action.payload;
+    }
+    ,
     restoreChanges: (state) => {
       state.updatedData.fullname = undefined;
       state.updatedData.username = undefined;
@@ -86,6 +91,7 @@ export const EditUserSlice = createSlice({
       state.userData = undefined;
       state.isDataUpdated = false;
       state.isCreateUser = false;
+      state.setIsModal = false;
     },
   }
 })
@@ -104,6 +110,7 @@ restoreChanges,
 setIsEditData,
 setUserData,
 setIsDataUpdated,
-setIsCreateUser } = EditUserSlice.actions
+setIsCreateUser,
+setIsModal } = EditUserSlice.actions
 
 export default EditUserSlice.reducer

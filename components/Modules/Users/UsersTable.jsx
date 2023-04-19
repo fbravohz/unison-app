@@ -14,7 +14,7 @@ import { useRouter } from 'next/router';
 
 
 
-export default function UsersTable( { usersData } ) {
+export default function UsersTable( { usersData, newUserButton } ) {
   // const [page, setPage] = React.useState(0);
   // const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -65,20 +65,20 @@ export default function UsersTable( { usersData } ) {
   }
 
   const columns = createColumnsFromKeys();
-  
+
   function createRows(){
     return usersData !== undefined ? (Array.isArray(usersData) ? usersData : [usersData]) : [];
   }
   let rows = []
   rows = createRows();
-  
+
   const router = useRouter();
 
   return (
     <div style={{ height: '97vh',width: '95vw', display: 'grid', gridTemplateColumns: '1fr 20fr 1fr', gridTemplateRows: '1fr 17fr 1fr', gridGap: '5px' }}>
         <Card variant='outlined' style={{gridRowStart: 2, gridRowEnd: 3, gridColumnStart: 2, gridColumnEnd: 3, borderRadius: '35px'}}>
           <TableContainer sx={{ height: '92%', overflow: "scroll", padding: '10px'}}>
-            <Table stickyHeader aria-label="UsersTable">
+            <Table aria-label="UsersTable">
               <TableHead>
                 <TableRow>
                   {columns.map((column) => (
@@ -90,9 +90,9 @@ export default function UsersTable( { usersData } ) {
               </TableHead>
               <TableBody>
                 {rows !== undefined ? (
-                    rows.map((row) => (
+                    rows.map((row, index) => (
                       <TableRow
-                        key={row.id}
+                        key={`${row.id}${index}`}
                         sx={ { '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.04)' } } }
                         onClick={()=>{ router.push(`/users/${row.id_user}`)}}
                         >
@@ -117,6 +117,7 @@ export default function UsersTable( { usersData } ) {
               </TableBody>
             </Table>
           </TableContainer>
+          {newUserButton}
           {/* <TablePagination
             // rowsPerPageOptions={[10, 25, 100]}
             // component="div"

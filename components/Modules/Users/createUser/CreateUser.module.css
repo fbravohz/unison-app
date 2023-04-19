@@ -1,0 +1,27 @@
+.modal {
+  display: grid;
+  justify-content: center;
+  position: fixed;
+  width: 84%;
+  height: 100%;
+  z-index: 1;
+  left: 16%;
+  top: 0;
+  overflow: auto;
+  background-color: rgba(0,0,0,20%);
+}
+
+.modalContent {
+  display: grid;
+  background-color: #fff;
+  margin: auto;
+  padding: 40px;
+  width: 700px;
+  height: 700px;
+  border-radius: 10px;
+}
+/*
+.closeModal {
+  display: block;
+  margin-top: 20px;
+} */

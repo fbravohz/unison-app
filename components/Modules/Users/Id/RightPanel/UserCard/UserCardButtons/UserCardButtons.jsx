@@ -6,8 +6,9 @@ import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 import styles from './UserCardButtons.module.css'
 import { useSelector, useDispatch } from "react-redux";
-import { setIsDataUpdated, setIsEditData, restoreChanges } from '/store/editUserSlice.js'
+import { setIsDataUpdated, setIsEditData, restoreChanges, restoreAll } from '/store/editUserSlice.js'
 import { useRouter } from "next/router";
+import { setIsCreateUser, setIsModal } from "../../../../../../../store/editUserSlice";
 
 /**
  * Displays a button for saving changes to user data.
@@ -64,7 +65,7 @@ export default function UserCardButtons() {
               icon={<SaveIcon/>}
               onClick={() => { !isCreateUser ?
               handleSave(updatedData, router, dispatch, setIsDataUpdated, setIsEditData)
-              : handleCreate(updatedData, router)
+              : handleCreate(updatedData, router, dispatch, restoreAll)
               }}
             />
           )
@@ -94,15 +95,17 @@ export default function UserCardButtons() {
             dispatch(setIsEditData(false))
             dispatch(restoreChanges())
             }
-            else
-              router.push('/users')
+            else{
+              dispatch(setIsModal(false))
+              dispatch(setIsCreateUser(false))
+            }
           }}
         />}
     </div>
   )
 }
 
-async function handleCreate(updatedData, router){
+async function handleCreate(updatedData, router, dispatch, restoreAll){
   const req = {
     method: 'POST',
     body: JSON.stringify(updatedData),
@@ -113,8 +116,9 @@ async function handleCreate(updatedData, router){
   const endpoint = `/api/users`;
   const res = await fetch(endpoint, req);
   const json = await res.json();
-  if(json.status === 200){
-    router.push('/users');
+  if(json.status === 201){
+    dispatch(restoreAll())
+    router.push(json.data);
   }
 }
 
@@ -131,7 +135,7 @@ async function handleSave(updatedData, router, dispatch, setIsDataUpdated, setIs
   const json = await res.json();
   if(json.status === 200){
     dispatch(setIsDataUpdated(true));
-    dispatch(setIsEditData(false));
+    router.reload();
   }
 }
 
@@ -144,6 +148,5 @@ async function handleDelete(router){
   }
   const endpoint = `/api/users/${router.query.id}`;
   const res = await fetch(endpoint, req);
-  console.log(res);
   router.push('/users')
 }
