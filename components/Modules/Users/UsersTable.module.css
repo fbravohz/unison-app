@@ -1,0 +1,16 @@
+
+.newUserBtn {
+  border-radius: 20px;
+  margin-left: 25px;
+}
+
+.tableFooter {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chip {
+  border-color: '#547b0f'
+}

@@ -1,0 +1,9 @@
+
+.loadingContainer {
+  display: grid;
+  justify-content: center;
+  position: fixed;
+  width: 84%;
+  height: 100%;
+  left: 16%;
+  }
