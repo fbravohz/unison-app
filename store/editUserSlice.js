@@ -91,7 +91,6 @@ export const EditUserSlice = createSlice({
       state.userData = undefined;
       state.isDataUpdated = false;
       state.isCreateUser = false;
-      state.setIsModal = false;
     },
   }
 })

@@ -65,7 +65,7 @@ export default function UserCardButtons() {
               icon={<SaveIcon/>}
               onClick={() => { !isCreateUser ?
               handleSave(updatedData, router, dispatch, setIsDataUpdated, setIsEditData)
-              : handleCreate(updatedData, router, dispatch, restoreAll)
+              : handleCreate(updatedData, router, dispatch, restoreAll, setIsModal)
               }}
             />
           )
@@ -105,7 +105,7 @@ export default function UserCardButtons() {
   )
 }
 
-async function handleCreate(updatedData, router, dispatch, restoreAll){
+async function handleCreate(updatedData, router, dispatch, restoreAll, setIsModal){
   const req = {
     method: 'POST',
     body: JSON.stringify(updatedData),
@@ -116,9 +116,12 @@ async function handleCreate(updatedData, router, dispatch, restoreAll){
   const endpoint = `/api/users`;
   const res = await fetch(endpoint, req);
   const json = await res.json();
+  console.log(json);
   if(json.status === 201){
+    router.prefetch(json.data)
     dispatch(restoreAll())
     router.push(json.data);
+    dispatch(setIsModal(false))
   }
 }
 
