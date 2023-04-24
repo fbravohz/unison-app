@@ -5,7 +5,9 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
 import { ModulesObjectArray } from './ModulesObjectArray';
 import { useRouter } from "next/router";
-import { SelectedModule } from './../Context';
+import { useDispatch, useSelector } from "react-redux";
+import { setSelectedSubModule } from "/store/selectModuleSlice.js"
+import { setSelectedModule } from "../../../store/selectModuleSlice";
 
 /**
  * Create a list of modules, that will contain the name of the module and an icon
@@ -13,12 +15,16 @@ import { SelectedModule } from './../Context';
  */
 
 function ModulesList( ){
-
   return (
     <List>
       {ModulesObjectArray.map((obj) => {
         return (
-          <ListItemButtonWrapper key={obj.label} label={obj.label} icon={obj.icon} subitems={obj.subitems}/>
+          <ListItemButtonWrapper
+            key={obj.label}
+            label={obj.label}
+            icon={obj.icon}
+            subitems={obj.subitems}
+          />
         )
       })}
     </List>
@@ -26,44 +32,58 @@ function ModulesList( ){
 }
 
 function ListItemButtonWrapper({ label, icon, subitems }){
-  const [open, setOpen] = React.useState(false);
-  const handleClick = () => {
-    setOpen(!open);
+  const selectedModule = useSelector(state => state.selectModule.selectedModule);
+  const dispatch = useDispatch()
+  const handleClick = (label) => {
+    selectedModule === label
+    ? dispatch(setSelectedModule(null))
+    : dispatch(setSelectedModule(label))
   }
   return (
     <>
-      <ListItemButton onClick={handleClick}>
+      <ListItemButton onClick={() => handleClick(label)}>
         <ListItemIcon>
           {icon}
         </ListItemIcon>
-        <ListItemText  primary={label}/>
-        {open ? <ExpandLess/> : <ExpandMore/>}
+        <ListItemText primary={label}/>
+        {selectedModule === label ? <ExpandLess/> : <ExpandMore/>}
       </ListItemButton>
-      <CollapseSubItems subitems={subitems} state={open}/>
+      <CollapseSubItems
+        subitems={subitems}
+        isOpen={selectedModule === label}
+      />
     </>
   );
 }
 
-function CollapseSubItems({ subitems, state}){
-  const [selectedModule, setSelectedModule] = useContext(SelectedModule);
+function CollapseSubItems({ subitems, isOpen}){
+  const selectedSubModule = useSelector(state => state.selectModule.selectedSubModule);
+  const dispatch = useDispatch()
   const router = useRouter();
   function handleClick(route, label){
-    setSelectedModule(label);
+    dispatch(setSelectedSubModule(label));
     router.push(route);
   }
   return (
     <>
-      <Collapse in={state} timeout="auto" unmountOnExit>
+      <Collapse in={isOpen} timeout="auto" unmountOnExit>
         <List>
           {subitems ?
           subitems.map((subitem)=> {
           return(
-            <ListItemButton key={subitem.label} sx={{ pl: 4 }} onClick={() => handleClick(subitem.route, subitem.label)} selected={selectedModule === subitem.label}>
-            <ListItemIcon>
-              {subitem.icon}
-            </ListItemIcon>
-            <ListItemText  primary={subitem.label}/>
-          </ListItemButton>
+            <ListItemButton
+              key={subitem.label}
+              sx={{ pl: 4 }}
+              onClick={() => handleClick(subitem.route, subitem.label)}
+              selected={selectedSubModule === subitem.label}
+            >
+              <ListItemIcon>
+                {subitem.icon}
+              </ListItemIcon>
+              <ListItemText
+                primary={subitem.label}
+              />
+            </ListItemButton>
           )})
           : null}
         </List>

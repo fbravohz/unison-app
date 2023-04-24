@@ -3,21 +3,39 @@ import React, { useState } from 'react';
 import { Box } from '@mui/system';
 import { IndexDrawer } from "./Drawer/IndexDrawer";
 import Head from 'next/head';
-import { SelectedModule } from './Context';
+import { useDispatch, useSelector } from 'react-redux';
+import { setSelectedModule, setSelectedSubModule } from '/store/selectModuleSlice';
+import { useRouter } from 'next/router';
 
 export default function Layout( props ) {
-  const [selectedModule, setSelectedModule] = useState('');
-  // is loading is ready to be used  for displaying a loader
-  const [ isLoading, setIsLoading ] = React.useState(true);
+  const selectedSubModule = useSelector(state => state.selectModule.selectedSubModule);
+  const selectedModule = useSelector(state => state.selectModule.selectedModule);
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  function checkRouteUpdateDrawerSelection(){
+    if(router.pathname === '/users'){
+      selectedModule !== 'Usuarios' && dispatch(setSelectedModule('Usuarios'))
+      selectedSubModule !== 'Listado' && dispatch(setSelectedSubModule('Listado'))
+    } // place here the logic for all modules and sub modules
+  }
+
+  checkRouteUpdateDrawerSelection();
+
   const [currentUser, setCurrentUser] = useState({});
 
   const fetchData = async () => {
-    setIsLoading(true);
-    const endpoint = '/api/auth/user'
-    const request = await fetch(endpoint, { method: 'GET', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }});
+    const endpoint = '/api/auth/user';
+    const req = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    };
+    const request = await fetch(endpoint, req);
     const data = await request.json();
     setCurrentUser(data.data);
-    setIsLoading(false);
   }
 
   React.useEffect(() => {
@@ -30,11 +48,8 @@ export default function Layout( props ) {
         <title>Growhill</title>
       </Head>
       <Box sx={{ display: 'flex'}}>
-        <SelectedModule.Provider value={[selectedModule, setSelectedModule]}>
-          <IndexDrawer user={ currentUser }/>
-        </SelectedModule.Provider>
+        <IndexDrawer user={ currentUser }/>
         {props.children}
-        <h1>{selectedModule}</h1>
       </Box>
     </>
   )
